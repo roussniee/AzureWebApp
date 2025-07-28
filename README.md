@@ -22,7 +22,21 @@ This internal web application automates the comparison of payroll data exported 
 - Windows 11
 - C0
 
-<h2>Program walk-through:</h2>
+<h2>Contributions </h2>
+
+- Developed backend logic using Python to compare complex payroll datasets
+- Built a user-friendly HTML interface for file uploads and results display
+- Integrated regular expressions to ensure flexible and accurate field matching
+- Deployed the app on Azure using a GitHub workflow for streamlined CI/CD
+- Designed the tool to work with regional payroll exports from multiple countries
+
+<h2>✅ Outcome</h2>
+
+-  Reduced comparison time from 6+ hours to under 2 minutes
+-  Increased accuracy and confidence in payroll verification
+-   eusable across business units and regional formats
+
+<h2>Program walk-through/Visual aids:</h2>
 <!--
 <p align="center">
 Launch the utility: <br/>
@@ -52,13 +66,7 @@ Sanitization complete:  <br/>
 Observe the wiped disk:  <br/>
 <img src="https://i.imgur.com/AeZkvFQ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
-
-<!--
- ```diff
-- text in red
-+ text in green
-! text in orange
-# text in gray
-@@ text in purple (and bold)@@
-```
 --!>
+
+<h3>Confidentiality Note</h3>
+<i>This project was developed using confidential company data. All screenshots and descriptions are based on test or mock data and omit any sensitive or proprietary information.</i>
