@@ -1,4 +1,4 @@
-<h1>Azure Web App/h1>
+<h1>Azure Web App</h1>
 
 <!--
  ### [YouTube Demonstration](https://youtu.be/7eJexJVCqJo)
