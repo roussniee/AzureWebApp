@@ -1,7 +1,7 @@
 <h1>Azure Web App</h1>
 
 <!--
- ### [YouTube Demonstration](https://youtu.be/7eJexJVCqJo)
+ ### [YouTube Demonstration](link)
  -->
 
 <h2>Description</h2>
@@ -34,40 +34,29 @@ This internal web application automates the comparison of payroll data exported 
 
 -  Reduced comparison time from 6+ hours to under 2 minutes
 -  Increased accuracy and confidence in payroll verification
--   eusable across business units and regional formats
+-   reusable across business units and regional formats
 
 <h2>Program walk-through/Visual aids:</h2>
-<i><b>Still building...</b></i>
-<!--
-<p align="center">
-Launch the utility: <br/>
-<img src="https://i.imgur.com/62TgaWL.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<i><b>Web App Mockups with sensitive information redacted</b></i>
+
+<p align="left">
+Home Page: <br/>
+<img src="https://imgur.com/ky1hq8a.png" height="80%" width="80%" alt="Web App Pages"/>
 <br />
 <br />
-Select the disk:  <br/>
-<img src="https://i.imgur.com/tcTyMUE.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+F-D Comparisons Page:  <br/>
+<img src="https://imgur.com/yFYbtPB.png" height="80%" width="80%" alt="Web App Pages"/>
 <br />
 <br />
-Enter the number of passes: <br/>
-<img src="https://i.imgur.com/nCIbXbg.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+F-C Comparisons Page: <br/>
+<img src="https://imgur.com/NgCPgtt.png" height="80%" width="80%" alt="Web App Pages"/>
 <br />
 <br />
-Confirm your selection:  <br/>
-<img src="https://i.imgur.com/cdFHBiU.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+File View Page:  <br/>
+<img src="https://imgur.com/lMRYIlN.png" height="80%" width="80%" alt="Web App Pages"/>
 <br />
-<br />
-Wait for process to complete (may take some time):  <br/>
-<img src="https://i.imgur.com/JL945Ga.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Sanitization complete:  <br/>
-<img src="https://i.imgur.com/K71yaM2.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Observe the wiped disk:  <br/>
-<img src="https://i.imgur.com/AeZkvFQ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
---!>
+
 
 <h3>Confidentiality Note</h3>
 <i>This project was developed using confidential company data. All screenshots and descriptions are based on test or mock data and omit any sensitive or proprietary information.</i>
