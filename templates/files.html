@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Comparison Output Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #001F3F; /* Navy Blue */
+            color: #FFFFFF; /* White */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo {
+            width: 100px; /* Adjust width as needed */
+            height: auto;
+            margin-left: 60px; /* move logo towards the left */
+            margin-right: 0;
+        }
+        nav {
+            background-color: #800020; /* Dark Red */
+            padding: 15px 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center items vertically */
+            width: 92%;
+            height: 50px; /* Set this to the height of your nav */
+            border-radius: 10px; /* Add rounded edges */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+        nav ul {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove default padding */
+            margin: 0; /* Remove default margin */
+            display: flex; /* Use flexbox for the list */
+            justify-content: center; /* Center items in the ul */
+            flex-grow: 1; /* Allow ul to take remaining space */
+            margin-right: 60px;
+        }
+        nav ul li {
+            margin: 0 20px; /* Add horizontal margin to each item */
+        }
+        nav ul li a {
+            color: #FFFFFF; /* White */
+            text-decoration: none;
+            font-size: 20px; /* Adjust size as needed */
+            font-weight: bold; /* Makes the text bold */
+            margin-left: 20px; /* Add left margin to move text over */
+        }
+        nav ul li a:hover {
+            color: #DDDDDD; /* Lighter White */
+        }
+        .content {
+            background-color: #666262; /* Darker Grey */
+            margin: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            width: 70%; /* Adjust this value to change the width of the content box */
+            text-align: left;
+        }
+        .file-list {
+            list-style-type: none;
+            padding: 0;
+            width: 100%; /* Full width to match the content box */
+        }
+        .file-list li {
+            background: #444; /* Darker background for file items */
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .container {
+            margin: 20px;
+            padding: 20px;
+        }
+        .file-section {
+            margin-bottom: 30px;
+        }
+        .file-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="{{ url_for('static', filename='assets/logo-image.png') }}" alt="logo" class="logo">
+        <ul>
+            <li><a href="{{ url_for('home') }}">Comparisons Home</a></li>
+            <li><a href="{{ url_for('f_d') }}">F-D Comparison</a></li>
+            <li><a href="{{ url_for('f_c') }}">F-C Comparison</a></li>
+            <li><a href="{{ url_for('files') }}">View Files</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Comparison Output Files</h1>
+        
+        <div class="file-section">
+            <h2>D Output Files</h2>
+            <ul id="D-files" class="file-list">
+                <!-- D files will be listed here -->
+            </ul>
+        </div>
+
+        <div class="file-section">
+            <h2>C Output Files</h2>
+            <ul id="C-files" class="file-list">
+                <!-- C files will be listed here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch and display files
+        function loadFiles() {
+            fetch('/api/files')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Display D files
+                        const DList = document.getElementById('D-files');
+                        DList.innerHTML = ''; // Clear existing list
+                        data.D_files.forEach(file => {
+                            const li = document.createElement('li');
+                            li.className = 'file-item';
+                            li.innerHTML = `
+                                <div class="file-info">
+                                    <span>${file.name}</span>
+                                    <span>${file.last_modified}</span>
+                                    <a href="/download/${file.container}/${file.name}" class="download-link">Download</a>
+                                </div>
+                            `;
+                            DList.appendChild(li);
+                        });
+
+                        // Display C files
+                        const CList = document.getElementById('C-files');
+                        CList.innerHTML = ''; // Clear existing list
+                        data.C_files.forEach(file => {
+                            const li = document.createElement('li');
+                            li.className = 'file-item';
+                            li.innerHTML = `
+                                <div class="file-info">
+                                    <span>${file.name}</span>
+                                    <span>${file.last_modified}</span>
+                                    <a href="/download/${file.container}/${file.name}" class="download-link">Download</a>
+                                </div>
+                            `;
+                            CList.appendChild(li);
+                        });
+                    } else {
+                        console.error('Error loading files:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Load files when page loads
+        window.onload = loadFiles;
+
+        // Refresh files every 30 seconds
+        setInterval(loadFiles, 30000);
+    </script>
+</body>
+</html>

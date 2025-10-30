@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>F-D Automations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #001F3F; /* Navy Blue */
+            color: #FFFFFF; /* White */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+           
+        }
+        .logo {
+            width: 100px; /* Adjust width as needed */
+            height: auto;
+            margin-left: 90px; /* move logo towards the left */
+            margin-right: 0;
+        }
+        nav {
+            background-color: #800020; /* Dark Red */
+            padding: 15px 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center items vertically */
+            width: 94%;
+            height: 50px; /* Set this to the height of your nav */
+            border-radius: 10px; /* Add rounded edges */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+        nav ul {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove default padding */
+            margin: 0; /* Remove default margin */
+            display: flex; /* Use flexbox for the list */
+            justify-content: center; /* Center items in the ul */
+            flex-grow: 1; /* Allow ul to take remaining space */
+            margin-right: 60px;
+        }
+        nav ul li {
+            margin: 0 20px; /* Add horizontal margin to each item */
+        }
+        nav ul li a {
+            color: #FFFFFF; /* White */
+            text-decoration: none;
+            font-size: 20px; /* Adjust size as needed */
+            font-weight: bold; /* Makes the text bold */
+            margin-left: 20px; /* Add left margin to move text over */
+        }
+        nav ul li a:hover {
+            color: #DDDDDD; /* Lighter White */
+        }
+        h1, p {
+            margin-left: 15px;
+        }
+        .content {
+            background-color: #666262; /* Darker Grey */
+            margin: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            width: 70%; /* Adjust this value to change the width of the content box */
+            text-align: left;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        form label{
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 10px;
+            width: 80%; /* adjust the space between nav links */
+        }
+        form input{
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 10px;
+            width: 70%;/* adjust the space between nav links */
+        }
+        form .input-group {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+        }
+        form .input-group label, form .input-group input {
+            width: auto; /* reset the width */
+        }
+        input[type="file2"] {
+            background-color: #FFFFFF; /* White */
+            color: #001F3F; /* Navy Blue */
+            border: none;
+            padding: 10px 20px;
+            text-align: left;
+            text-decoration: none;
+            display: inline-flex;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 15%; /* adjust the space between nav links */
+        }
+        input[value="Upload Files"] {
+            background-color: #FFFFFF; /* White */
+            color: #001F3F; /* Navy Blue */
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 15%;
+        }
+        input[value="Run F-D Comparison"] {
+            background-color: #ee3232; /* White */
+            color: #001F3F; /* Navy Blue */
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 30%;
+        }
+        .flash-messages {
+            margin: 10px 0;
+            padding: 10px;
+        }
+        .flash-message {
+            background-color: #f8f9fa;
+            color: #000;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        #loading-message {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="{{ url_for('static', filename='assets/logo-image.png') }}" alt="logo" class="logo">
+        <ul>
+            <li><a href="{{ url_for('home') }}">Comparisons Home</a></li>
+            <li><a href="{{ url_for('f_d') }}">F-D Comparison</a></li>
+            <li><a href="{{ url_for('f_c') }}">F-C Comparison</a></li>
+            <li><a href="{{ url_for('files') }}">View Files</a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        <h1>F-D Comparison File Upload</h1>
+        <p>Please note that you can only upload one F file and one D file at a time. When you upload a F file along with a D file, it will generate one corresponding output file, which can be downloaded from the View Files page. Please refer to the date and time in the title name to determine which file is your output file. <br> If you have multiple D files that need to be compared to F data, you will need to upload the F file and each D file and run the comparison separately for each one.</p>
+        
+        <!-- To display flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <form action="{{ url_for('submit_password') }}" method="post">
+            <div style="display: flex;">
+                <label for="file_password"><p>If the files are password-protected, please enter the password below. Otherwise, proceed to file upload. <i>(optional)</i> </p></label>
+                <input type="password" name="file_password" placeholder="Enter file password" style="width: 150px; height: 40px; margin-top: 10px; margin-right: 15px; border: none">
+                <button type="submit" style="height: 40px; background-color: #6893be; color: #001F3F; margin-top: 10px; border-radius: 10px; border: none">Submit Password</button>
+            </div>
+        </form>
+        <form action="{{ url_for('upload_F_D') }}" method="post" enctype="multipart/form-data">
+            <label for="F_file">Upload F File:</label>
+            <input type="file" id="F_file" name="F_file" />
+            <label for="D_file">Upload D File:</label>
+            <input type="file" id="D_file" name="D_file" />
+            <input type="submit" value="Upload Files" />
+        </form>
+        <form action="{{ url_for('run_script_f_d') }}" method="post" id="comparison-form">
+            <input type="submit" value="Run F-D Comparison" />
+        </form>
+    </div>
+    <div id="loading-message" style="display: none;">
+        Processing comparison... This may take a few minutes. You can check the <b>View Files</b> section when complete.
+    </div>
+    <script>
+        document.getElementById('comparison-form').onsubmit = function() {
+        document.getElementById('loading-message').style.display = 'block';
+        return true;};
+    </script>
+</body>
+</html>

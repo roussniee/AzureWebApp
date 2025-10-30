@@ -1,0 +1,6 @@
+Flask==1.1.1
+pandas
+msoffcrypto-tool
+openpyxl
+azure.storage.blob
+python-dateutil

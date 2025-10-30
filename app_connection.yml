@@ -1,0 +1,127 @@
+name: Deploy to Azure
+
+on:
+
+  workflow_dispatch:
+
+env:
+  AZURE_APP_DEV: app-dev-001  # Azure app name for development
+  AZURE_APP_PROD: app-prod-001  # Azure app name for production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # Checkout the code from the repository
+
+    - name: Set up Python
+      uses: actions/setup-python@v4  # Set up Python environment
+      with:
+        python-version: '3.11'  # Specify Python version
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install azure.storage.blob  
+        pip install msoffcrypto-tool
+        pip install -r requirements.txt 
+
+    - name: Zip artifact for deployment
+      run: |
+        # Make sure the implementation script is included
+        if [ -f "FD Implementation.py" ]; then
+          echo "Implementation script found"
+        else
+          echo "Warning: Implementation script not found"
+          exit 1
+        fi
+        zip release.zip ./* -r  # Zip the build artifacts for deployment
+
+    - name: Upload artifact for deployment
+      uses: actions/upload-artifact@v4  # Upload the zipped artifact
+      with:
+        name: repository  # Name of the artifact
+        path: release.zip  # Path to the artifact
+
+  Deploy-on-DEV:
+    environment: 'dev'
+    needs: build
+    runs-on: 
+      group: DevOps-Self-Hosted
+    steps:
+    - name: Awaiting approval
+      run: echo "Please approve this workflow in the Actions tab."  # Await manual approval
+
+    - name: Checkout code
+      uses: actions/checkout@v3  # Checkout the code from the repository
+
+    - name: Log in to Azure
+       run: |
+         set +e  # Allow the next command to fail without stopping the script
+         echo "Attempting to log in to Azure..."
+         
+         # Read the credentials from the secret
+         creds="${{ secrets.AZURE_DEV_CREDENTIALS }}"
+         
+         # Extract clientId, clientSecret, and tenantId using Bash string manipulation
+         client_id=$(echo $creds | sed -n 's/.*"clientId": "\(.*\)".*/\1/p')
+         client_secret=$(echo $creds | sed -n 's/.*"clientSecret": "\(.*\)".*/\1/p')
+         tenant_id=$(echo $creds | sed -n 's/.*"tenantId": "\(.*\)".*/\1/p')
+
+         # Debug output
+         echo "Client ID: $client_id"
+         echo "Client Secret: $client_secret"
+         echo "Tenant ID: $tenant_id"
+
+         # Log in to Azure
+         az login --service-principal --username "$client_id" --password "$client_secret" --tenant "$tenant_id"
+         echo "Login attempt complete."
+         set -e  # Re-enable exit on error
+
+    - name: Print environment variables
+      run: env
+
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v4  # Download the artifact from the build job
+      with:
+        name: repository  # Name of the artifact
+        path: stage  # Path to download the artifact
+
+    - name: Unzip artifact for deployment
+      run: unzip -q stage/release.zip -d deployment  # Unzip the artifact for deployment
+
+    - name: Deploy to Azure Web App (Staging)
+      uses: azure/webapps-deploy@v2  # Deploy to Azure Web App
+      with:
+        app-name: ${{ env.AZURE_APP_DEV }}  # Azure app name for development
+        package: . #deployment  # Path to the deployment package
+
+  Deploy-on-PROD:
+    environment: 'prod'
+    needs: Deploy-on-DEV  # can comment this line out if i want to deploy directly to dev rather than waiting on dev then doing
+    runs-on:
+        group: DevOps-Self-Hosted
+    steps:
+    - name: Awaiting approval
+      run: echo "Please approve this workflow in the Actions tab."  # Await manual approval
+
+    - name: Checkout code
+      uses: actions/checkout@v3  # Checkout the code from the repository
+
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v4  # Download the artifact from the build job
+      with:
+        name: repository  # Name of the artifact
+        path: stage  # Path to download the artifact
+
+    - name: Unzip artifact for deployment
+      run: unzip -q stage/release.zip -d deployment  # Unzip the artifact for deployment
+
+    - name: Deploy to Azure Web App (Production)
+      uses: azure/webapps-deploy@v2  # Deploy to Azure Web App
+      with:
+        app-name: ${{ env.AZURE_APP_PROD }}  # Azure app name for production
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: .  # Path to the deployment package
